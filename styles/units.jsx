@@ -8,7 +8,6 @@ export const units = {
     , vh: height / 100
 };
 
-// console.log("units" , units)
 
 units.vmin = Math.min(units.vw, units.vh);
 units.vmax = Math.max(units.vw, units.vh);

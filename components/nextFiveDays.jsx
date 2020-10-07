@@ -18,7 +18,7 @@ export default function NextFiveDays(props) {
     }
 
     return (
-        <View style={{ alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' , marginTop : 3*units.vh}}>
             <View style={{ display: 'flex', width: 300 }}>
                 {displayCards()}
             </View>

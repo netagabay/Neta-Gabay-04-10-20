@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextInput, View, FlatList, Text } from 'react-native';
+import { Button, View, FlatList, Text , ActivityIndicator } from 'react-native';
 import Header from './header.jsx';
 import { importData } from './storageFunctions';
 import PlaceDetails from './placeDetails';
 import { units } from '../styles/units.jsx';
+import { globalStyles } from '../styles/globalStyles.jsx';
+
 
 export default function Favorites({ navigation }) {
 
@@ -18,7 +20,6 @@ export default function Favorites({ navigation }) {
     }
 
     const moveToMainPage = (location) => {
-        console.log("loc" , location)
         navigation.navigate('MainPage', { location })
     }
 
@@ -26,7 +27,6 @@ export default function Favorites({ navigation }) {
         (async () => {
             var value = await importData()
             const val = JSON.parse(JSON.stringify(value));
-            console.log("value", JSON.parse(JSON.stringify(value))[0])
             let favArr = [];
             for (let i in val) {
                 const arrayCityCountry = value[i][1].split('$')
@@ -39,20 +39,32 @@ export default function Favorites({ navigation }) {
             }
             setFavorites(favArr)
         })()
-        // console.log("somei",importData())
     }, [])
 
     const displayPlaces = () => {
-        let list = <FlatList
-            data={favorites}
-            keyExtractor={(item) => item.key}
-            renderItem={({ item }) => (
-                <View style={{ marginBottom: 30 }}>
-                    <PlaceDetails moveToMainPage={moveToMainPage} deletedFromFavorites={deletedFromFavorites} favoritePage={true} location={item} />
-                </View>
-            )}
-        />
-        return list
+        if (favorites.length) {
+            let list = <FlatList
+                data={favorites}
+                keyExtractor={(item) => item.key}
+                renderItem={({ item }) => (
+                    <View style={{ marginBottom: 30 }}>
+                        <PlaceDetails moveToMainPage={moveToMainPage} deletedFromFavorites={deletedFromFavorites} favoritePage={true} location={item} />
+                    </View>
+                )}
+            />
+            return list
+        } else {
+            let noFav = <View style={{ display: 'flex', alignItems: 'center', height: 150, justifyContent: 'space-evenly' }}>
+                <Text >there are no favorite places yet,</Text>
+                <Text >add some from home page!</Text>
+                <Button
+                    onPress={() => navigation.navigate('MainPage')}
+                    title="to home page"
+                    color="#841584"
+                />
+            </View>
+            return noFav
+        }
     }
 
     return (
@@ -61,8 +73,8 @@ export default function Favorites({ navigation }) {
             <View style={{ marginTop: 30, height: 80 * units.vh }}>
                 {favorites ? displayPlaces()
                     :
-                    <View>
-                        <Text> loading</Text>
+                    <View style={[globalStyles.container, globalStyles.horizontal]}>
+                        <ActivityIndicator size="large" color="#841584" />
                     </View>}
             </View>
         </View>

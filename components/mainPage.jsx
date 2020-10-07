@@ -1,29 +1,38 @@
-import React, { useEffect, useState , useRef } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Alert , Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Alert, Image , ActivityIndicator } from 'react-native';
 import SearchArea from './searchArea.jsx';
 import Header from './header.jsx';
 import PlaceDetails from './placeDetails.jsx'
 import { units } from '../styles/units.jsx';
+import { globalStyles } from '../styles/globalStyles.jsx';
 import NextFiveDays from './nextFiveDays.jsx';
+import rain from '../assets/rainy.png';
+import Constants from "expo-constants";
+import sky from '../assets/sky.png';
 
 export default function MainPage(props) {
     const [weatherDetails, setWeatherDetails] = useState(null);
     const [location, setLocation] = useState(null);
-    const [nextFiveDays, setNextFiveDays] = useState(null)
+    const [nextFiveDays, setNextFiveDays] = useState(null);
+    const [checkFavAgain, setCheckFaveAgin] = useState(false)
 
+    //default location - telAviv
     useEffect(() => {
-        if (props.route.params && props.route.params.location) {
-            // console.log("lof", props.route.params.location)
-            searchFunc(props.route.params.location)
+        let defaultLocation = {
+            city: "Tel Aviv",
+            country: "Israel",
+            key: "215854"
         }
+        searchFunc(defaultLocation)
     }, [])
 
-    
-    const clickMe = useRef(new Animated.Value(0)).current;
-
-    const animations = (animationName, value, dur = 1000) => {
-        Animated.timing(animationName, { toValue: value, duration: dur }).start();
-    };
+    //from favorite page
+    useEffect(() => {
+        if (props.route.params && props.route.params.location) {
+            searchFunc(props.route.params.location);
+            setCheckFaveAgin(true)
+        }
+    }, [props])
 
 
     const fiveDaysFunc = (res) => {
@@ -32,7 +41,6 @@ export default function MainPage(props) {
             const date = new Date(res.DailyForecasts[i].Date);
             const day1 = date.getDay();
             const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            console.log("week", weekday[day1])
             let obj = {
                 min: res.DailyForecasts[i].Temperature.Minimum.Value,
                 max: res.DailyForecasts[i].Temperature.Maximum.Value,
@@ -45,12 +53,12 @@ export default function MainPage(props) {
     }
 
     const searchFunc = async (location) => {
-        console.log("555", location.key);
         setLocation(location)
+        //Temp 
         await fetch(`http://dataservice.accuweather.com/currentconditions/v1/${location.key}?apikey=xeOxh2CVVam4yNzvGelq9v4rrLWe3zOX`)
             .then(response => response.json())
             .then(data => {
-                console.log("data", data)
+                console.log("Temp data", data)
                 let weatherDetails = {
                     text: data[0].WeatherText,
                     Temperature: data[0].Temperature.Metric.Value
@@ -60,10 +68,11 @@ export default function MainPage(props) {
                 Alert.alert('there was an error calling the server');
                 console.log('Error:', error);
             });
+        //Next5days 
         await fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${location.key}?apikey=xeOxh2CVVam4yNzvGelq9v4rrLWe3zOX&metric=true`)
             .then(response => response.json())
             .then(data => {
-                console.log("data", data)
+                console.log("Next5days data", data)
                 fiveDaysFunc(data)
             }).catch((error) => {
                 Alert.alert('there was an error calling the server');
@@ -74,21 +83,27 @@ export default function MainPage(props) {
     return (
         <View >
             <Header title="Home Page" menuFunc={() => props.navigation.openDrawer()} />
+            {weatherDetails && <Image source={weatherDetails.Temperature < 20 ? rain : sky} style={[globalStyles.BackgroundImage, { marginTop: Constants.statusBarHeight + 7 * units.vh }]} resizeMode='stretch' />}
             <View style={{ height: 80 * units.vh, marginTop: 5 * units.vh }}>
-                {/* {func()} */}
                 <SearchArea searchFunc={searchFunc} />
-                {weatherDetails && nextFiveDays &&
-                    <View>
+                {weatherDetails && nextFiveDays ?
+                    <View style={{ marginTop: 5 * units.vh }}>
                         <PlaceDetails
+                            changeCheckFavAgain={() => setCheckFaveAgin(false)}
+                            checkFavAgain={checkFavAgain}
                             location={location}
                             weatherDetails={weatherDetails}
                         />
                         <NextFiveDays nextDaysArr={nextFiveDays} />
+                    </View> :
+                    <View style={[globalStyles.container, globalStyles.horizontal]}>
+                        <ActivityIndicator size="large" color="#841584" />
                     </View>}
             </View>
         </View>
     );
 }
+
 
 
 
