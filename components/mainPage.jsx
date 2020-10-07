@@ -30,6 +30,8 @@ export default function MainPage(props) {
     useEffect(() => {
         if (props.route.params && props.route.params.location) {
             searchFunc(props.route.params.location);
+        }
+        if (props.route.params && props.route.params.checkFav) {
             setCheckFaveAgin(true)
         }
     }, [props])
@@ -89,7 +91,7 @@ export default function MainPage(props) {
                 {weatherDetails && nextFiveDays ?
                     <View style={{ marginTop: 5 * units.vh }}>
                         <PlaceDetails
-                            changeCheckFavAgain={() => setCheckFaveAgin(false)}
+                            setCheckFaveAgin={() => setCheckFaveAgin(false)}
                             checkFavAgain={checkFavAgain}
                             location={location}
                             weatherDetails={weatherDetails}

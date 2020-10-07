@@ -21,8 +21,10 @@ export default function PlaceDetails(props) {
 
     //check if removed from favorites
     useEffect(() => {
-        favoriteButtonPressed();
-        props.changeCheckFavAgain()
+        if (props.checkFavAgain) {
+            favoriteButtonPressed();
+            props.setCheckFaveAgin()
+        }
     }, [props.checkFavAgain])
 
     const favoriteButtonPressed = () => {

@@ -20,7 +20,7 @@ export default function Favorites({ navigation }) {
     }
 
     const moveToMainPage = (location) => {
-        navigation.navigate('MainPage', { location })
+        navigation.navigate('MainPage', { location , checkFav : true })
     }
 
     useEffect(() => {
@@ -58,7 +58,7 @@ export default function Favorites({ navigation }) {
                 <Text >there are no favorite places yet,</Text>
                 <Text >add some from home page!</Text>
                 <Button
-                    onPress={() => navigation.navigate('MainPage')}
+                    onPress={() => navigation.navigate('MainPage' , { checkFav : true })}
                     title="to home page"
                     color="#841584"
                 />
