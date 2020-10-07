@@ -3,6 +3,8 @@ import { TextInput, View, FlatList, Text, StyleSheet, Alert, Animated } from 're
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 
+let searchInput = null;
+
 export default function SearchArea(props) {
     const [text, setText] = useState('');
     const [autoComplete, setAutoComplete] = useState(null);
@@ -77,6 +79,7 @@ export default function SearchArea(props) {
             <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <View style={{ display: 'flex', flexDirection: 'column' }}>
                     <TextInput
+                        ref={(input) => searchInput = input}
                         textAlign='center'
                         placeholder='enter city'
                         style={{ borderRadius: 10, borderColor: textError !== '' ? 'red' : '#841584', width: 200, height: 40, borderWidth: 3, display: 'flex' }}

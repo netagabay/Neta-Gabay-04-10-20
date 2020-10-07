@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Alert, Image , ActivityIndicator } from 'react-native';
+import { View, Alert, Image, ActivityIndicator } from 'react-native';
 import SearchArea from './searchArea.jsx';
 import Header from './header.jsx';
 import PlaceDetails from './placeDetails.jsx'
@@ -16,6 +16,15 @@ export default function MainPage(props) {
     const [nextFiveDays, setNextFiveDays] = useState(null);
     const [checkFavAgain, setCheckFaveAgin] = useState(false)
 
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => { 
+                setCheckFaveAgin(true)
+        });
+
+        return unsubscribe;
+    }, []);
+
+
     //default location - telAviv
     useEffect(() => {
         let defaultLocation = {
@@ -30,9 +39,6 @@ export default function MainPage(props) {
     useEffect(() => {
         if (props.route.params && props.route.params.location) {
             searchFunc(props.route.params.location);
-        }
-        if (props.route.params && props.route.params.checkFav) {
-            setCheckFaveAgin(true)
         }
     }, [props])
 

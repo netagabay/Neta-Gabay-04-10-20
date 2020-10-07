@@ -9,7 +9,6 @@ import { globalStyles } from '../styles/globalStyles.jsx'
 export default function PlaceDetails(props) {
     const [isFavorite, setIsFavorite] = useState(props.favoritePage ? true : false)
 
-    //from favorite page
     useEffect(() => {
         (async () => {
             if (!props.favoritePage) {
@@ -22,10 +21,14 @@ export default function PlaceDetails(props) {
     //check if removed from favorites
     useEffect(() => {
         if (props.checkFavAgain) {
-            favoriteButtonPressed();
+            (async () => {
+                var value = await retrieveData(props.location.key)
+                setIsFavorite(value)
+            })()
             props.setCheckFaveAgin()
         }
     }, [props.checkFavAgain])
+
 
     const favoriteButtonPressed = () => {
         let success = isFavorite ? removeItem(props.location.key) : storeData(props.location.key, props.location.city + '$' + props.location.country);
@@ -39,8 +42,8 @@ export default function PlaceDetails(props) {
     return (
         <View style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
             <View style={styles.card}>
-                <View style={{ justifyContent: 'space-evenly', height: 100, width: 130 }}>
-                    <Text style={[globalStyles.Text, { fontSize: 30 }]}>
+                <View style={{ justifyContent: 'space-evenly', height: 100, width: 140 }}>
+                    <Text style={[globalStyles.Text, { fontSize: 28 }]}>
                         {props.location.city}
                     </Text>
                     <Text style={[globalStyles.Text, { fontSize: 20 }]}>
@@ -57,7 +60,7 @@ export default function PlaceDetails(props) {
                         </TouchableOpacity>
                         :
                         <View style={{ justifyContent: 'space-evenly', height: 100 }}>
-                            <Text style={[globalStyles.Text, { fontSize: 40, textAlign: 'center', marginTop: 15 }]}>
+                            <Text style={[globalStyles.Text, { fontSize: 35, textAlign: 'center', marginTop: 15 }]}>
                                 {props.weatherDetails.Temperature}°C
                             </Text>
                             <Text style={[globalStyles.Text, { fontSize: 20, textAlign: 'center' }]}>
