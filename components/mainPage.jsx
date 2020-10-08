@@ -63,7 +63,7 @@ export default function MainPage(props) {
     const searchFunc = async (location) => {
         setLocation(location)
         //Temp 
-        await fetch(`http://dataservice.accuweather.com/currentconditions/v1/${location.key}?apikey=xeOxh2CVVam4yNzvGelq9v4rrLWe3zOX`)
+        await fetch(`http://dataservice.accuweather.com/currentconditions/v1/${location.key}?apikey=PpWYxRhsO7kaFE0x6GzUbZUnhK0BiO0l`)
             .then(response => response.json())
             .then(data => {
                 console.log("Temp data", data)
@@ -77,7 +77,7 @@ export default function MainPage(props) {
                 console.log('Error:', error);
             });
         //Next5days 
-        await fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${location.key}?apikey=xeOxh2CVVam4yNzvGelq9v4rrLWe3zOX&metric=true`)
+        await fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${location.key}?apikey=PpWYxRhsO7kaFE0x6GzUbZUnhK0BiO0l&metric=true`)
             .then(response => response.json())
             .then(data => {
                 console.log("Next5days data", data)

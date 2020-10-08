@@ -18,7 +18,7 @@ export default function SearchArea(props) {
     ////
 
     const autocompleteFunction = () => {
-        fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=xeOxh2CVVam4yNzvGelq9v4rrLWe3zOX&q=${text}`)
+        fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=PpWYxRhsO7kaFE0x6GzUbZUnhK0BiO0l&q=${text}`)
             .then(response => response.json())
             .then(data => {
                 console.log("autocompleteFunction data", data)
